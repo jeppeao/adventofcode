@@ -86,4 +86,4 @@ readFile('./Day2-CubeConundrum/puzzleInput.txt', 'utf-8')
   .then(gameIds => gameIds.reduce((acc, id) => { return  acc + parseInt(id) }, 0 ))
   .then(result => console.log(result));
 
-// console.log("Game 15: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green".match(drawsRe))
+

@@ -11,7 +11,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/Day2-CubeConundrum/partOne.js"
+      "program": "${workspaceFolder}/Day2-CubeConundrum/partTwo.js"
     }
   ]
 }
