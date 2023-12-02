@@ -19,7 +19,6 @@ What is the sum of all of the calibration values?
 */
 
 const { readFile } = require('fs/promises');
-const { default: test } = require('node:test');
 
 const testString = `two1nine
 eightwothree
