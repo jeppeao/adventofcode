@@ -11,7 +11,8 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/Day2-CubeConundrum/partTwo.js"
+      "program": "${workspaceFolder}/Day3/partTwo.js",
+      "outputCapture": "std"
     }
   ]
 }
