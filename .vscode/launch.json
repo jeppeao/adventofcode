@@ -11,7 +11,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/Day5/partTwo.js",
+      "program": "${workspaceFolder}/Day6/partTwo.js",
       "outputCapture": "std"
     }
   ]
