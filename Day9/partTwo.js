@@ -1,8 +1,5 @@
-// import fetch from 'node-fetch';
-// const response = await fetch('https://adventofcode.com/2023/day/9/input');
-// const body = await response.text();
-
 // https://adventofcode.com/2023/day/9#part1
+
 import { readFile } from 'fs/promises'
 
 const testData = 
