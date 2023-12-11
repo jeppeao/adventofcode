@@ -24,6 +24,19 @@ const testData2 =
 .L--JL--J.
 ..........`;
 
+const testData3 = 
+`.F----7F7F7F7F-7....
+.|F--7||||||||FJ....
+.||.FJ||||||||L7....
+FJL7L7LJLJ||LJ.L-7..
+L--J.L7...LJS7F-7L7.
+....F-J..F7FJ|L7L7L7
+....L7.F7||L7|.L7L7|
+.....|FJLJ|FJ|F7|.LJ
+....FJL-7.||.||||...
+....L---J.LJ.LJLJ...
+`
+
 const connectsTo = (i, type, cols, ni) => {
   const left = sameRow(i, i-1, cols, ni) ? [i-1] : [];
   const right = sameRow(i, i+1, cols, ni) ? [i+1] : [];
@@ -103,41 +116,20 @@ const findLoop = (elements, conns) => {
   return visited;
 }
 
-const sqConns = (i, j, elements, loop) => {
-  const conns = [];
-  const exits = [];
-  let UL = i * cols + j;
-  let UR = i * cols + j + 1;
-  let DL = (i+1) * cols + j;
-  let DR = (i+1) * cols + j + 1;
-  let TUL = loop.includes(UL) ? elements[i * cols + j] : '.';
-  let TUR = loop.includes(UR) ? elements[i * cols + j + 1] : '.';
-  let TDL = loop.includes(DL) ? elements[(i+1) * cols + j] : '.';
-  let TDR = loop.includes(DR) ? elements[(i+1) * cols + j + 1] : '.';
-  if (TUL === '.') exits.push(UL);
-  if (TUR === '.') exits.push(UR);
-  if (TDL === '.') exits.push(DL);
-  if (TDR === '.') exits.push(DR);
-  if (!['F', '-', '.'].includes(TUL) 
-    && !['7', '-', '.'].includes(TUR)) conns.push();
-}
-
-const squeezePoints = (elements, loop, cols) => {
-  let rows = elements.length / cols;
-  let sqCols = cols - 1;
-  let sqRows = rows - 1;
-  let sqLen = cols * rows;
-  const sqConn = [];
-
-  for (let i=0; i<sqRows; i++) {
-    for (let j=0; j<sqCols; j++) {
-      let conns = [];
-
-      
-      console.log(i, j, UL, UR, DL, DR)
+const isInside = (i, elements, cols, loop) => {
+  let col = Math.floor(i / cols);
+  let first = cols * col;
+  let vert = ['|', 'J', 'L'];
+  let vertCount = 0;
+  for (let j=first; j<i; j++) {
+    if(loop.includes(j) 
+      && vert.includes(elements[j])
+      && !loop.includes(i)
+    ) {
+      vertCount++;
     }
-    
   }
+  return vertCount % 2 !== 0;
 }
 
 const solve =(data) => {
@@ -148,11 +140,8 @@ const solve =(data) => {
   const outConn = elements.map(
     (e, i) => connToOutside(i, elements, loop, cols)
   );
-  squeezePoints(elements, loop, cols);
-  const inside = elements.map((e, i) => !outConn[i] && !loop.includes(i));
-  // print(inside, cols, ni)
-  // print (outConn, cols, ni)
-  // printSelected(loop, elements, cols, ni)
+  const inside = elements.map((e, i) => isInside(i, elements, cols, loop));
+  return inside.filter(Boolean).length;
 }
 
 const printSelected = (selected, elements, cols, ni) => {
@@ -172,5 +161,5 @@ const print = (elements, cols, ni) => {
 }
 
 readFile('./Day10/puzzleInput.txt', 'utf-8')
-  .then(file => solve(testData2))
+  .then(file => solve(file))
   .then(res => console.log(res))
