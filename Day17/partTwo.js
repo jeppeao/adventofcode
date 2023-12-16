@@ -1,18 +1,18 @@
-// https://adventofcode.com/2023/day/16#part2
+// https://adventofcode.com/2023/day/15#part2
 
 import { readFile } from 'fs/promises'
 
 const testData = 
-`.|...\....
-|.-.\.....
-.....|-...
-........|.
+`...#......
+.......#..
+#.........
 ..........
-.........\
-..../.\\..
-.-.-/..|..
-.|....-|.\
-..//.|....`
+......#...
+.#........
+.........#
+..........
+.......#..
+#...#.....`
 
 const parse = (data) => {
   const parsed = '';
@@ -23,6 +23,6 @@ const solve = (data) => {
   return parsed;
 }
 
-readFile('./Day16/puzzleInput.txt', 'utf-8')
+readFile('./Day12/puzzleInput.txt', 'utf-8')
   .then(file => solve(testData))
   .then(res => console.log(res))
