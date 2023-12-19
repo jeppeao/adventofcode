@@ -94,7 +94,6 @@ const printTiles = (tiles, cols) => {
 }
 
 
-
 readFile('./Day18/puzzleInput.txt', 'utf-8')
   .then(file => solve(file))
   .then(res => console.log(res))
