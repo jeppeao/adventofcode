@@ -110,30 +110,50 @@ const createBroadcasterModule = (dests) => {
   }
 }
 
-const processPulse = (handlers, pulse) => {
+const processPulse = (handlers, pulse, gps) => {
   let s = [pulse];
-  let count = {0: 0, 1:0}
-  count[pulse.pulse] += 1;
+  let highSigs = {}
+  for (let gp of gps) {
+    highSigs[gp] = false;
+  }
   while (s.length > 0) {
     let cur = s.shift();
+    if (gps.includes(cur.source) && cur.dest === 'xm' && cur.pulse === 1) {
+      highSigs[cur.source] = true;
+    }
     let processed = handlers[cur.dest] ? handlers[cur.dest](cur) : [];
     s = s.concat(processed);
-    for (let p of processed) {
-      count[p.pulse] += 1;
-    }
   }
-  return count;
+  return highSigs;
 }
 
-const dumbPush = (handlers, startPulse, n) => {
-  let count = {0: 0, 1:0}
-  for (let i=0; i<n; i++) {
-    let c = processPulse(handlers, startPulse);
-    count[0] += c[0];
-    count[1] += c[1];
-    console.log(i, n)
+const grandParentNodes = (node, sources) => {
+  let parent = sources[node];
+  return sources[parent];
+}
+
+const grandCycles = (gps, handlers, startPulse) => {
+  let highSigs = {}
+  for (let gp of gps) {
+    highSigs[gp] = [];
   }
-  return count;
+  for (let i=1; i<10000; i++) {
+    let sigs = processPulse(handlers, startPulse, gps);
+    for (let gp of gps) {
+      if (sigs[gp]) {
+        highSigs[gp].push(i)
+      }
+    }
+  }
+  return Object.values(highSigs).map(s => s[0])
+}
+
+const gcd = (a, b) => {
+  return !b ? a : gcd(b, a % b);
+}
+
+const lcm = (a, b) => {
+  return (a * b) / (gcd(a, b));
 }
 
 const solve = (data) => {
@@ -142,9 +162,13 @@ const solve = (data) => {
   const sources = getSources(modules);
   const handlers = getPulseHandlers(modules, sources)
   let startPulse = {dest: 'broadcaster', pulse: 0, source: null}
-  let count = dumbPush(handlers, startPulse, 1000)
+  
+  // assume that conjunction nodes feeding into rx parent will all be cyclical
+  let gps = grandParentNodes('rx', sources);
+  let cs = grandCycles(gps, handlers, startPulse);
 
-  return count[0] * count[1];
+  let start = cs.pop();
+  return cs.reduce((acc, n) => lcm(acc, n) , start);
 }
 
 readFile('./Day20/puzzleInput.txt', 'utf-8')
